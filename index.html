@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid E-com | ابوالفضل</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;900&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
+            min-height: 100 screen;
+        }
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .blob {
+            position: fixed;
+            width: 500px; height: 500px;
+            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.15;
+            animation: move 20s infinite alternate;
+        }
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(20%, 20%); }
+        }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
+    </style>
+</head>
+<body class="text-slate-200">
+
+    <div class="blob"></div>
+
+    <nav class="liquid-glass sticky top-0 z-50 p-5 mb-10 border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-black tracking-tighter bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                LIQUID STORE
+            </h1>
+            <div id="user-status" class="px-4 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-blue-300">
+                <i class="fas fa-circle-user ml-2"></i> مهمان
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 pb-20">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+            <div class="lg:col-span-8 space-y-10">
+
+                <div class="liquid-glass p-8 rounded-[2rem] grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-black text-emerald-400">ثبت‌نام سریع</h2>
+                        <input id="reg-email" type="email" placeholder="ایمیل" class="w-full p-3 rounded-2xl bg-white/5 border border-white/10 focus:ring-2 ring-emerald-500 outline-none transition-all">
+                        <input id="reg-pass" type="password" placeholder="رمز عبور" class="w-full p-3 rounded-2xl bg-white/5 border border-white/10 focus:ring-2 ring-emerald-500 outline-none transition-all">
+                        <button onclick="register()" class="w-full bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-white p-3 rounded-2xl font-bold transition-all border border-emerald-500/30">ساخت اکانت</button>
+                    </div>
+                    <div class="space-y-4 md:border-r border-white/10 md:pr-10">
+                        <h2 class="text-xl font-black text-blue-400">ورود به پنل</h2>
+                        <input id="login-email" type="email" placeholder="ایمیل" class="w-full p-3 rounded-2xl bg-white/5 border border-white/10 focus:ring-2 ring-blue-500 outline-none transition-all">
+                        <input id="login-pass" type="password" placeholder="رمز عبور" class="w-full p-3 rounded-2xl bg-white/5 border border-white/10 focus:ring-2 ring-blue-500 outline-none transition-all">
+                        <button onclick="login()" class="w-full bg-blue-500 hover:bg-blue-600 p-3 rounded-2xl font-bold shadow-lg shadow-blue-500/20 transition-all">ورود</button>
+                    </div>
+                </div>
+
+                <div class="liquid-glass p-8 rounded-[2.5rem]">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-black flex items-center gap-3"><i class="fas fa-sparkles text-yellow-400"></i> ویترین مدرن</h2>
+                        <button onclick="fetchProducts()" class="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-all"><i class="fas fa-rotate"></i></button>
+                    </div>
+                    <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 gap-6 h-[600px] overflow-y-auto custom-scroll pr-4">
+                        </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 space-y-10">
+                <div class="liquid-glass p-8 rounded-[2.5rem] sticky top-32">
+                    <h2 class="text-2xl font-black mb-8 flex items-center gap-3 text-cyan-400">
+                        <i class="fas fa-bag-shopping"></i> سبد شما
+                    </h2>
+
+                    <div id="cart-items" class="space-y-5 mb-8 max-h-80 overflow-y-auto custom-scroll pr-2 text-sm">
+                        <p class="text-slate-500 text-center italic">سبد شما در انتظار انتخاب کالا...</p>
+                    </div>
+
+                    <div class="pt-6 border-t border-white/10 space-y-5">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">قابل پرداخت:</span>
+                            <span id="grand-total" class="text-3xl font-black text-emerald-400 font-mono">0 $</span>
+                        </div>
+                        <button id="checkout-btn" onclick="checkout()" disabled class="w-full bg-gradient-to-br from-emerald-500 to-teal-600 p-5 rounded-3xl font-black text-xl shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-20 disabled:grayscale">
+                            ثبت نهایی سفارش
+                        </button>
+                        <p id="status-msg" class="text-center text-xs h-4"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8000/api/v1";
+        let token = localStorage.getItem('token') || "";
+
+        // UI Initialization
+        if(token) {
+            document.getElementById('user-status').innerHTML = `<i class="fas fa-check-circle ml-2 text-emerald-400"></i> لاگین شده`;
+            updateCartUI();
+        }
+
+        async function register() {
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-pass').value;
+            const res = await fetch(`${API_BASE}/auth/users/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if(res.ok) alert("اکانت ساخته شد! وارد شوید.");
+        }
+
+        async function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-pass').value;
+            const res = await fetch(`${API_BASE}/auth/jwt/create/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if(data.access) {
+                token = data.access;
+                localStorage.setItem('token', token);
+                location.reload();
+            } else alert("ورود ناموفق!");
+        }
+
+        async function fetchProducts() {
+            const res = await fetch(`${API_BASE}/products/`);
+            const data = await res.json();
+            const container = document.getElementById('product-list');
+            container.innerHTML = data.map(p => `
+                <div class="liquid-glass p-5 rounded-3xl border border-white/5 hover:border-blue-500/30 transition-all group relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-bold text-white group-hover:text-blue-400 transition-colors">${p.name}</h3>
+                            <span class="text-[10px] uppercase tracking-widest bg-white/5 px-2 py-1 rounded-lg text-slate-400">${p.category.title}</span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <p class="text-2xl font-black text-emerald-400 font-mono">${p.price}$</p>
+                                <p class="text-[10px] text-slate-500">موجودی: ${p.inventory}</p>
+                            </div>
+                            <button onclick="addToCart(${p.id})" class="bg-blue-600 hover:bg-blue-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 transition-all active:scale-90">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // منطق جدید سبد خرید (User-Centric)
+        async function addToCart(productId) {
+            if(!token) return alert("لطفاً ابتدا وارد حساب خود شوید.");
+
+            const res = await fetch(`${API_BASE}/carts/me/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ product_id: productId, quantity: 1 })
+            });
+
+            if(res.status === 201 || res.status === 200) updateCartUI();
+            else alert("خطا در افزودن به سبد!");
+        }
+
+        async function updateCartUI() {
+            if(!token) return;
+            const res = await fetch(`${API_BASE}/carts/me/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(!res.ok) return;
+
+            const data = await res.json();
+            const container = document.getElementById('cart-items');
+
+            if(data.items.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-center py-4 italic">سبد شما خالی است.</p>`;
+                document.getElementById('checkout-btn').disabled = true;
+            } else {
+                container.innerHTML = data.items.map(item => `
+                    <div class="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
+                        <div>
+                            <p class="font-bold text-slate-200">${item.product.name}</p>
+                            <p class="text-[10px] text-slate-500">${item.quantity} عدد</p>
+                        </div>
+                        <span class="font-bold text-blue-400 font-mono">${item.total_price}$</span>
+                    </div>
+                `).join('');
+                document.getElementById('checkout-btn').disabled = false;
+            }
+            document.getElementById('grand-total').innerText = `${data.grand_total} $`;
+        }
+
+        async function checkout() {
+            const msg = document.getElementById('status-msg');
+            msg.innerText = "در حال پردازش سفارش...";
+            msg.className = "text-center text-xs mt-2 text-blue-400";
+
+            const res = await fetch(`${API_BASE}/orders/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+                // دیگر نیازی به ارسال cart_id نیست!
+            });
+
+            if(res.ok) {
+                const data = await res.json();
+                msg.innerHTML = `<i class="fas fa-check-circle"></i> سفارش #${data.id} ثبت شد!`;
+                msg.className = "text-center text-xs mt-2 text-emerald-400 font-bold";
+                updateCartUI();
+                fetchProducts();
+            } else {
+                const err = await res.json();
+                msg.innerText = "خطا در موجودی یا انبار";
+                msg.className = "text-center text-xs mt-2 text-red-400";
+            }
+        }
+
+        fetchProducts();
+    </script>
+</body>
+</html>
